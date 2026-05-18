@@ -1,3 +1,6 @@
 data/processed/waze_clean.csv
 data/processed/waze_eda_features.csv
 data/raw/waze_dataset.csv
+
+# Ignore model files and large data files
+*.pkl
