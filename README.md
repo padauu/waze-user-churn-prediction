@@ -1,4 +1,4 @@
-# Waze User Churn Prediction
+# Waze User Churn Risk Modeling and User Segmentation
 
 ## Overview
 
