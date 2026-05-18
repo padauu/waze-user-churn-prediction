@@ -4,3 +4,7 @@ data/raw/waze_dataset.csv
 
 # Ignore model files and large data files
 *.pkl
+
+# ignore Python cache files
+__pycache__/
+*.pyc
