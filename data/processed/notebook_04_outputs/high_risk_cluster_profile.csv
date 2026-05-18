@@ -1,0 +1,4 @@
+behavior_cluster,activity_days,driving_days,n_days_after_onboarding,sessions,drives,total_sessions,km_per_driving_day,drives_per_activity_day,drives_per_driving_day,percent_sessions_in_last_month,total_favorite_navigations,has_favorite_navigation
+0,7.0,4.0,399.0,69.0,60.0,219.1724043,922.19244825,8.571428571428571,15.0,0.3689941777331181,317.0,1.0
+1,3.0,2.0,1399.0,280.0,232.0,382.53680285,1753.28454125,87.33333333333334,128.5,0.7834888828326151,122.5,1.0
+2,2.0,1.0,1030.0,57.0,50.0,153.9422111,1707.36440975,19.0,9.5,0.4137376881466408,150.0,1.0
