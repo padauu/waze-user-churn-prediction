@@ -18,8 +18,24 @@ conda activate ml-env
 python -m pip install -e ".[dev]"
 python scripts/train_model.py --output-dir artifacts/training-run
 python examples/predict.py
+uvicorn backend.app.main:app --reload
 python -m pytest -q
 ```
+
+API documentation is available at `http://127.0.0.1:8000/docs` while the
+development server is running.
+
+Available endpoints:
+
+| Method | Endpoint         | Purpose                       |
+| ------ | ---------------- | ----------------------------- |
+| GET    | `/health`        | Service and model health      |
+| GET    | `/model/info`    | Active model metadata         |
+| POST   | `/predict`       | Single-user prediction        |
+| POST   | `/predict/batch` | Batch prediction up to 1,000  |
+
+Model locations can be overridden with `WAZE_MODEL_PATH` and
+`WAZE_METADATA_PATH`.
 
 ## Overview
 
