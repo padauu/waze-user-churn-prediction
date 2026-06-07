@@ -17,6 +17,10 @@ class Settings:
     metadata_path: Path = (
         PROJECT_ROOT / "models" / "waze_churn_model_metadata.json"
     )
+    cors_origins: tuple[str, ...] = (
+        "http://127.0.0.1:5173",
+        "http://localhost:5173",
+    )
 
 
 def get_settings() -> Settings:
@@ -39,5 +43,13 @@ def get_settings() -> Settings:
                     / "waze_churn_model_metadata.json"
                 ),
             )
+        ),
+        cors_origins=tuple(
+            origin.strip()
+            for origin in os.getenv(
+                "WAZE_CORS_ORIGINS",
+                "http://127.0.0.1:5173,http://localhost:5173",
+            ).split(",")
+            if origin.strip()
         ),
     )

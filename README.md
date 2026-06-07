@@ -37,6 +37,16 @@ Available endpoints:
 Model locations can be overridden with `WAZE_MODEL_PATH` and
 `WAZE_METADATA_PATH`.
 
+Run the frontend in a second terminal:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+The web interface is available at `http://127.0.0.1:5173`.
+
 ## Overview
 
 This project builds a machine learning pipeline to predict Waze user churn risk and translate model outputs into business-facing retention recommendations.

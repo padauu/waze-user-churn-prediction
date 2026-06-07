@@ -11,6 +11,9 @@ data/raw/waze_dataset.csv
 .ruff_cache/
 *.egg-info/
 artifacts/
+frontend/node_modules/
+frontend/dist/
+frontend/*.tsbuildinfo
 
 # ignore Python cache files
 __pycache__/

@@ -102,3 +102,18 @@ def test_batch_rejects_empty_request(api_client):
     response = api_client.post("/predict/batch", json={"users": []})
 
     assert response.status_code == 422
+
+
+def test_cors_allows_local_frontend(api_client):
+    response = api_client.options(
+        "/predict",
+        headers={
+            "Origin": "http://localhost:5173",
+            "Access-Control-Request-Method": "POST",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == (
+        "http://localhost:5173"
+    )

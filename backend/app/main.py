@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from typing import Annotated
 
 from fastapi import Depends, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from backend.app.config import Settings, get_settings
 from backend.app.dependencies import get_predictor
@@ -41,6 +42,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             "Predict calibrated Waze user churn risk for single users or batches."
         ),
         lifespan=lifespan,
+    )
+    application.add_middleware(
+        CORSMiddleware,
+        allow_origins=list(runtime_settings.cors_origins),
+        allow_credentials=False,
+        allow_methods=["GET", "POST", "OPTIONS"],
+        allow_headers=["Content-Type"],
     )
 
     @application.get("/health", response_model=HealthResponse, tags=["system"])
