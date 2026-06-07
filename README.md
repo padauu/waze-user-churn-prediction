@@ -16,6 +16,7 @@ Quick start:
 ```powershell
 conda activate ml-env
 python -m pip install -e ".[dev]"
+python scripts/train_model.py --output-dir artifacts/training-run
 python examples/predict.py
 python -m pytest -q
 ```

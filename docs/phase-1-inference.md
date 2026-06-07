@@ -56,3 +56,30 @@ results = predictor.predict_batch(list_of_records)
 
 The caller must never manually reproduce scaling, one-hot encoding, percentile
 caps, or engineered features. Those transformations are part of the artifact.
+
+## Reproducible training
+
+The notebook remains the research record for model comparison and business
+analysis. The approved model can be retrained without running notebook cells:
+
+```powershell
+python scripts/train_model.py
+```
+
+To avoid overwriting the active artifact while experimenting:
+
+```powershell
+python scripts/train_model.py --output-dir artifacts/training-run
+```
+
+The training command reproduces the Notebook 03 recipe:
+
+1. Load `waze_clean.csv`.
+2. Create stratified train, validation, and test splits using a `60/20/20`
+   ratio and random seed `42`.
+3. Fit robust scaling, p99 capping, and Logistic Regression with `C=0.01`.
+4. Fit sigmoid probability calibration on the validation set.
+5. Tune the decision threshold on validation data using false-negative cost
+   `5` and false-positive cost `1`.
+6. Evaluate once on the held-out test set.
+7. Save the model, metadata, threshold table, and test predictions.
