@@ -59,6 +59,24 @@ npm run dev
 
 The web interface is available at `http://127.0.0.1:5173`.
 
+Run the production-style Docker stack:
+
+```powershell
+docker compose up --build
+```
+
+The containerized web interface is available at `http://127.0.0.1:8080`.
+The backend API remains available at `http://127.0.0.1:8000`.
+
+Stop the Docker stack:
+
+```powershell
+docker compose down
+```
+
+If ports `8000` or `8080` are already in use, stop the existing local process
+or change the host-side port mapping in `docker-compose.yml`.
+
 ## Overview
 
 This project builds a machine learning pipeline to predict Waze user churn risk and translate model outputs into business-facing retention recommendations.
