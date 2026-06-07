@@ -1,5 +1,28 @@
 # Waze User Churn Prediction
 
+## Production App Development
+
+Production development is taking place on the `production-app` branch.
+Phase 1 extracts notebook inference into an installable Python package with:
+
+- A versioned, importable model artifact;
+- A validated 11-feature input contract;
+- Single-user and batch prediction methods;
+- Reusable feature engineering;
+- Automated tests and linting.
+
+Quick start:
+
+```powershell
+conda activate ml-env
+python -m pip install -e ".[dev]"
+python examples/predict.py
+python -m pytest -q
+```
+
+See [`docs/phase-1-inference.md`](docs/phase-1-inference.md) for the inference
+flow and Python API.
+
 ## Overview
 
 This project builds a machine learning pipeline to predict Waze user churn risk and translate model outputs into business-facing retention recommendations.

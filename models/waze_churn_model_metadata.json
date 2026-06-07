@@ -15,5 +15,18 @@
         "pr_auc": 0.3677916130374428,
         "model": "LogisticRegression_RobustCapped",
         "threshold_source": "validation_min_cost"
+    },
+    "model_version": "1.0.0",
+    "artifact_file": "waze_churn_model.joblib",
+    "artifact_format": "joblib",
+    "scikit_learn_version": "1.7.2",
+    "high_usage_thresholds": {
+        "sessions": 243.0,
+        "drives": 200.0,
+        "total_sessions": 455.4394923899998,
+        "driven_km_drives": 8898.716274999999,
+        "duration_minutes_drives": 4668.180091799999,
+        "total_navigations_fav1": 422.0,
+        "total_navigations_fav2": 124.0
     }
 }

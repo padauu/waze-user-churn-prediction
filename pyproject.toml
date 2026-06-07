@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "waze-churn"
+version = "0.1.0"
+description = "Production inference package for the Waze churn risk model"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "joblib>=1.4,<2",
+    "numpy>=1.26,<3",
+    "pandas>=2.2,<3",
+    "scikit-learn==1.7.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8,<9",
+    "ruff>=0.6,<1",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+extend-exclude = ["notebooks"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
