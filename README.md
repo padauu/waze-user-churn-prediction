@@ -21,9 +21,6 @@ python examples/predict.py
 python -m pytest -q
 ```
 
-See [`docs/phase-1-inference.md`](docs/phase-1-inference.md) for the inference
-flow and Python API.
-
 ## Overview
 
 This project builds a machine learning pipeline to predict Waze user churn risk and translate model outputs into business-facing retention recommendations.
