@@ -30,7 +30,11 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer, OneHotEncoder, RobustScaler
 
-from waze_churn.features import PercentileCapper, add_waze_features
+from waze_churn.features import (
+    PercentileCapper,
+    add_high_usage_flags,
+    add_waze_features,
+)
 from waze_churn.schema import (
     HIGH_USAGE_FEATURES,
     MODEL_INPUT_FEATURES,
@@ -73,7 +77,7 @@ class TrainingResult:
 def load_training_data(data_path: str | Path) -> pd.DataFrame:
     """Load and validate the cleaned modeling dataset."""
     frame = pd.read_csv(data_path)
-    required_columns = [TARGET_COLUMN, *MODEL_INPUT_FEATURES]
+    required_columns = [TARGET_COLUMN, *RAW_INPUT_FEATURES]
     missing = [column for column in required_columns if column not in frame.columns]
     if missing:
         raise ValueError(f"Training data is missing required columns: {missing}")
@@ -91,7 +95,7 @@ def load_training_data(data_path: str | Path) -> pd.DataFrame:
 
 def split_dataset(frame: pd.DataFrame) -> DatasetSplit:
     """Create the same stratified 60/20/20 split used in Notebook 03."""
-    X = frame.loc[:, MODEL_INPUT_FEATURES]
+    X = frame.loc[:, RAW_INPUT_FEATURES]
     y = frame[TARGET_COLUMN].map(TARGET_MAPPING)
 
     X_train_validation, X_test, y_train_validation, y_test = train_test_split(
@@ -263,11 +267,32 @@ def select_minimum_cost_threshold(threshold_results: pd.DataFrame) -> float:
 
 
 def calculate_high_usage_thresholds(frame: pd.DataFrame) -> dict[str, float]:
-    """Recover the p95 thresholds used to create model input flags."""
+    """Learn p95 thresholds used to create model input flags."""
     return {
         feature: float(frame[feature].quantile(0.95))
         for feature in HIGH_USAGE_FEATURES
     }
+
+
+def add_training_high_usage_flags(
+    split: DatasetSplit,
+    thresholds: dict[str, float],
+) -> DatasetSplit:
+    """Add learned high-usage flags after the train/validation/test split."""
+    return DatasetSplit(
+        X_train=add_high_usage_flags(split.X_train, thresholds).loc[
+            :, MODEL_INPUT_FEATURES
+        ],
+        X_validation=add_high_usage_flags(split.X_validation, thresholds).loc[
+            :, MODEL_INPUT_FEATURES
+        ],
+        X_test=add_high_usage_flags(split.X_test, thresholds).loc[
+            :, MODEL_INPUT_FEATURES
+        ],
+        y_train=split.y_train,
+        y_validation=split.y_validation,
+        y_test=split.y_test,
+    )
 
 
 def train_and_save(
@@ -280,7 +305,9 @@ def train_and_save(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     frame = load_training_data(data_path)
-    split = split_dataset(frame)
+    raw_split = split_dataset(frame)
+    high_usage_thresholds = calculate_high_usage_thresholds(raw_split.X_train)
+    split = add_training_high_usage_flags(raw_split, high_usage_thresholds)
 
     base_model = build_model_pipeline(split.X_train)
     base_model.fit(split.X_train, split.y_train)
@@ -321,7 +348,7 @@ def train_and_save(
     joblib.dump(calibrated_model, model_path)
     threshold_results.to_csv(threshold_results_path, index=False)
 
-    prediction_frame = split.X_test.loc[:, RAW_INPUT_FEATURES].copy()
+    prediction_frame = raw_split.X_test.loc[:, RAW_INPUT_FEATURES].copy()
     prediction_frame["actual_churn"] = split.y_test.to_numpy()
     prediction_frame["predicted_churn"] = test_predictions
     prediction_frame["churn_probability"] = test_probabilities
@@ -360,7 +387,7 @@ def train_and_save(
             "validation": len(split.X_validation),
             "test": len(split.X_test),
         },
-        "high_usage_thresholds": calculate_high_usage_thresholds(frame),
+        "high_usage_thresholds": high_usage_thresholds,
         "test_metrics": test_metrics,
     }
     metadata_path.write_text(

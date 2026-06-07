@@ -16,7 +16,6 @@ Quick start:
 ```powershell
 conda activate ml-env
 python -m pip install -e ".[dev]"
-python scripts/train_model.py --output-dir artifacts/training-run
 python examples/predict.py
 uvicorn backend.app.main:app --reload
 python -m pytest -q
@@ -33,6 +32,19 @@ Available endpoints:
 | GET    | `/model/info`    | Active model metadata         |
 | POST   | `/predict`       | Single-user prediction        |
 | POST   | `/predict/batch` | Batch prediction up to 1,000  |
+
+The repository includes a small demo model artifact in `models/` so the API
+and frontend can run immediately after installation. Generated retraining
+artifacts are ignored by default.
+
+To retrain the model and serve that new artifact:
+
+```powershell
+python scripts/train_model.py --output-dir artifacts/training-run
+$env:WAZE_MODEL_PATH = "artifacts/training-run/waze_churn_model.joblib"
+$env:WAZE_METADATA_PATH = "artifacts/training-run/waze_churn_model_metadata.json"
+uvicorn backend.app.main:app --reload
+```
 
 Model locations can be overridden with `WAZE_MODEL_PATH` and
 `WAZE_METADATA_PATH`.

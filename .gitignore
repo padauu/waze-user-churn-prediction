@@ -4,6 +4,8 @@ data/raw/waze_dataset.csv
 
 # Ignore model files and large data files
 *.pkl
+*.joblib
+!models/waze_churn_model.joblib
 
 # Local environments and test caches
 .venv/
