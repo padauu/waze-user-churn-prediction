@@ -68,6 +68,12 @@ docker compose up --build
 The containerized web interface is available at `http://127.0.0.1:8080`.
 The backend API remains available at `http://127.0.0.1:8000`.
 
+The Docker stack runs two services:
+
+- `backend`: FastAPI inference service on port `8000`.
+- `frontend`: Nginx-served React app on port `8080`, proxying `/api/*`
+  requests to the backend container.
+
 Stop the Docker stack:
 
 ```powershell

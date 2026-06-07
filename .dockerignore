@@ -1,6 +1,8 @@
 .git
 .agents
 .codex
+.venv
+.venv/
 .pytest_cache
 .ruff_cache
 __pycache__/
@@ -12,6 +14,7 @@ data/
 frontend/
 learning-notes/
 notebooks/
+notebooks/.ipynb_checkpoints/
 tests/
 
 models/*
